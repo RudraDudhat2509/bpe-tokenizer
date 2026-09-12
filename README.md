@@ -1,6 +1,6 @@
 # bpe-tokenizer
 
-A byte-pair encoding (BPE) tokenizer, built from scratch — no `tiktoken`,
+A byte-pair encoding (BPE) tokenizer, built from scratch (MANUALLY CODED LOL) no `tiktoken`,
 no `sentencepiece`, no `transformers`. Part of a larger from-scratch AI
 stack: [autograd-engine](https://github.com/RudraDudhat2509/autograd-engine),
 [tiny-transformer](https://github.com/RudraDudhat2509/tiny-transformer),
