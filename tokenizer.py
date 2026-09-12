@@ -93,7 +93,11 @@ class BPETokenizer:
         byte-level BPE never has an "unknown token" problem. Raises if
         called before train().
         """
-        raise NotImplementedError
+        local=list(text.encode('utf-8'))
+        for i,j in self.merges:
+            local=self.replace(local,self.merges[(i,j)],i,j)
+        return local
+                    
 
     def decode(self, ids: list[int]) -> str:
         """
