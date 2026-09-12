@@ -1,31 +1,40 @@
-# build-your-own-llm
+# bpe-tokenizer
 
-An AI agent stack built entirely from scratch, stage by stage: tokenizer,
-autograd engine, neural network, transformer, training loop, training
-data, serving engine, vector database, and finally the agent that ties
-it all together — deployed to the cloud, not just running on a laptop.
+A byte-pair encoding (BPE) tokenizer, built from scratch — no `tiktoken`,
+no `sentencepiece`, no `transformers`. Part of a larger from-scratch AI
+stack: [autograd-engine](https://github.com/RudraDudhat2509/autograd-engine),
+[tiny-transformer](https://github.com/RudraDudhat2509/tiny-transformer),
+[vector-db](https://github.com/RudraDudhat2509/vector-db), and
+[llm-agent](https://github.com/RudraDudhat2509/llm-agent) tie the rest
+together.
 
-Full roadmap and reasoning: see the design spec (kept in the main
-`altagic` workspace at
-`docs/superpowers/specs/2026-09-12-build-your-own-llm-stack-design.md`).
+## What it does
 
-Every stage lives in its own numbered folder. Each stage has a scaffold
-(interface + tests) provided, and the actual implementation written by
-hand.
+Turns text into a list of integer token ids, and back, using byte-level
+BPE (the same family of algorithm GPT-2/GPT-4 use): start from raw
+UTF-8 bytes (256 possible values, so any text in any language or emoji
+is representable with zero "unknown token" cases), then learn merges
+by repeatedly combining whichever adjacent pair of tokens is most
+frequent in the training text.
 
-## Stages
+## Status
 
-- [ ] `01_tokenizer` — byte-pair encoding (BPE), from scratch
-- [ ] `02_autograd` — backprop engine
-- [ ] `03_basic_nn` — char-level language model
-- [ ] `04_attention` — scaled dot-product attention, from raw matrix ops
-- [ ] `05_transformer` — full GPT architecture
-- [ ] `06_training_loop` — optimizer + training loop, own weights
-- [ ] `07_training_data` — data pipeline
-- [ ] `08_serving` — inference engine
-- [ ] `09_vector_db` — brute-force → graph search → HNSW
-- [ ] `10_agent` — tie it all together
-- [ ] `11_containerize` — Docker
-- [ ] `12_cloud_deploy` — AWS EC2 + S3
-- [ ] `13_cicd` — GitHub Actions
-- [ ] `14_observability` — OpenTelemetry / Langfuse on the deployed agent
+Scaffold + test suite in place (`tokenizer.py`, `test_tokenizer.py`).
+Implementation in progress.
+
+## Usage (once implemented)
+
+```python
+from tokenizer import BPETokenizer
+
+tok = BPETokenizer()
+tok.train("some training text", vocab_size=500)
+ids = tok.encode("some new text")
+text = tok.decode(ids)
+```
+
+## Running tests
+
+```
+pytest test_tokenizer.py -v
+```
