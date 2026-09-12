@@ -54,7 +54,7 @@ class BPETokenizer:
                 out.append(id[i])
                 i+=1
         return out
-            
+        
             
     def train(self, text: str, vocab_size: int) -> None:
         """
@@ -70,12 +70,15 @@ class BPETokenizer:
         self.id=list(text.encode('utf-8'))
         self.merges={}
         self.counter=256
+        self.vocab={}
+        self.vocab= {i: bytes([i]) for i in range(256)}
         for i in range(vocab_size-256):
           self.adj_freq=self.count_freq(self.id)
           m=max(self.adj_freq,key=self.adj_freq.get)
           x,y=m
           self.id=self.replace(self.id,self.counter,x,y)
           self.merges[(x,y)]=self.counter
+          self.vocab[self.counter]= self.vocab[x]+self.vocab[y]
           self.counter+=1
           
 
@@ -105,4 +108,7 @@ class BPETokenizer:
         satisfy: self.decode(self.encode(x)) == x for any string x,
         once trained. Raises if called before train().
         """
-        raise NotImplementedError
+        byte=bytes()
+        for i in ids:
+            byte+=self.vocab[i]
+        return byte.decode('utf-8')
