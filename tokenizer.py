@@ -38,6 +38,24 @@ Useful docs, not solutions:
 
 
 class BPETokenizer:
+    def count_freq(self,li):
+        count={}
+        for i in range(len(li)-1):
+            count[(li[i],li[i+1])]=count.get((li[i],li[i+1]),0)+1
+        return count
+    def replace(self,id,c,x,y):
+        out=[]
+        i=0
+        while(i<len(id)):
+            if i<len(id)-1 and id[i]==x and id[i+1]==y:
+                out.append(c)
+                i+=2
+            else:
+                out.append(id[i])
+                i+=1
+        return out
+            
+            
     def train(self, text: str, vocab_size: int) -> None:
         """
         Learn a BPE vocabulary from `text`.
@@ -49,7 +67,22 @@ class BPETokenizer:
 
         Does not return anything - mutates self.
         """
-        raise NotImplementedError
+        self.id=list(text.encode('utf-8'))
+        self.merges={}
+        self.counter=256
+        for i in range(vocab_size-256):
+          self.adj_freq=self.count_freq(self.id)
+          m=max(self.adj_freq,key=self.adj_freq.get)
+          x,y=m
+          self.id=self.replace(self.id,self.counter,x,y)
+          self.merges[(x,y)]=self.counter
+          self.counter+=1
+          
+
+            
+          
+        
+            
 
     def encode(self, text: str) -> list[int]:
         """
